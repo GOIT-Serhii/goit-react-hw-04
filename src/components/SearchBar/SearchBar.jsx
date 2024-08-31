@@ -13,7 +13,12 @@ export default function SearchBar({ onSearch }) {
         }}
       >
         <Form className={css.form}>
-          <Field type="text" name="topic" className={css.input} />
+          <Field
+            type="text"
+            name="topic"
+            placeholder="Search photos and images"
+            className={css.input}
+          />
           <button className={css.sbtBtn} type="submit">
             <FaSearch className={css.icon} />
           </button>
