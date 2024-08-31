@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import SearchBar from "../SearchBar/SearchBar";
 import css from "./App.module.css";
 import { fetchPhotos } from "../services/fetchUnsplash";
+import ImageGallery from "../ImageGallery/ImageGallery";
+import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
+import Loader from "../Loader/Loader";
+import ErrorMassage from "../ErrorMassage/ErrorMassage";
+import Modal from "react-modal";
+import ImageModal from "../ImageModal/ImageModal";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -11,6 +17,10 @@ function App() {
   const [topic, setTopic] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(999);
+
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [currentItem, setCurrentItem] = useState("");
+  const [currentItemDescr, setCurrentItemDescr] = useState("");
 
   useEffect(() => {
     if (topic === "") {
@@ -22,9 +32,11 @@ function App() {
         setLoading(true);
         setError(false);
         const res = await fetchPhotos(topic, page);
-        setPhotos((prevState) => [...prevState, ...res.photos]);
-        setTotalPages(res.totalPages);
+        setPhotos((prevState) => [...prevState, ...res.results]);
+        setTotalPages(res.total_pages);
+        console.log(res);
       } catch (error) {
+        console.log(error);
         setError(true);
       } finally {
         setLoading(false);
@@ -43,20 +55,41 @@ function App() {
   const handleLoadMore = () => {
     setPage(page + 1);
   };
+
+  function openModal(valueSrc, descr) {
+    setIsOpen(true);
+    setCurrentItem(valueSrc);
+    setCurrentItemDescr(descr);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
   return (
-    <div>
+    <div className={css.containerApp}>
       <SearchBar onSearch={handleSearch} />
-      {photos.length > 0 && <ArticleList items={photos} />}
+      {photos.length > 0 && (
+        <ImageGallery openModal={openModal} items={photos} />
+      )}
 
       {page >= totalPages && <b>END OF COLLECTION!!!!</b>}
 
-      {error && <b>ERROR!!!</b>}
+      {error && <ErrorMassage />}
 
-      {loading && <b>LOADING...</b>}
+      {loading && <Loader />}
 
       {photos.length > 0 && !loading && (
-        <button onClick={handleLoadMore}>Load more</button>
+        <LoadMoreBtn onClick={handleLoadMore} />
       )}
+
+      <ImageModal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        currentItem={currentItem}
+        currentItemDescr={currentItemDescr}
+        onClose={closeModal}
+      ></ImageModal>
     </div>
   );
 }
