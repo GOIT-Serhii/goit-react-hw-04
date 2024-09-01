@@ -24,7 +24,7 @@ function App() {
   const [currentItemDescr, setCurrentItemDescr] = useState("");
 
   useEffect(() => {
-    if (topic === "") {
+    if (topic.trim() === "") {
       return;
     }
 
