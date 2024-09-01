@@ -1,9 +1,14 @@
 import css from "./ImageCard.module.css";
 
-export default function ImageCard({ src, alt }) {
+export default function ImageCard({ item, openModal }) {
   return (
     <div>
-      <img className={css.image} src={src} alt={alt} />
+      <img
+        onClick={() => openModal(item.urls.regular, item.description)}
+        className={css.image}
+        src={item.urls.small}
+        alt={item.description}
+      />
     </div>
   );
 }

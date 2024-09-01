@@ -6,8 +6,9 @@ import ImageGallery from "../ImageGallery/ImageGallery";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 import Loader from "../Loader/Loader";
 import ErrorMassage from "../ErrorMassage/ErrorMassage";
-import Modal from "react-modal";
+
 import ImageModal from "../ImageModal/ImageModal";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -34,7 +35,6 @@ function App() {
         const res = await fetchPhotos(topic, page);
         setPhotos((prevState) => [...prevState, ...res.results]);
         setTotalPages(res.total_pages);
-        console.log(res);
       } catch (error) {
         console.log(error);
         setError(true);
@@ -47,6 +47,9 @@ function App() {
   }, [page, topic]);
 
   const handleSearch = (newTopic) => {
+    if (newTopic.trim() === "") {
+      toast.error("You need to type something");
+    }
     setTopic(newTopic);
     setPage(1);
     setPhotos([]);
@@ -72,6 +75,7 @@ function App() {
       {photos.length > 0 && (
         <ImageGallery openModal={openModal} items={photos} />
       )}
+      <Toaster position="top-center" reverseOrder={false} />
 
       {page >= totalPages && <b>END OF COLLECTION!!!!</b>}
 
