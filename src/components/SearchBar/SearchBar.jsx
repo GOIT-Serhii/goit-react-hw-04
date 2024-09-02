@@ -12,9 +12,10 @@ export default function SearchBar({ onSearch }) {
         onSubmit={(values, actions) => {
           if (values.topic.trim() === "") {
             toast.error("You need to type something");
+          } else {
+            onSearch(values.topic);
+            actions.resetForm();
           }
-          onSearch(values.topic);
-          actions.resetForm();
         }}
       >
         <Form className={css.form}>
