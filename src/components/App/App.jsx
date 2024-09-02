@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
 import SearchBar from "../SearchBar/SearchBar";
-import css from "./App.module.css";
-import { fetchPhotos } from "../services/fetchUnsplash";
 import ImageGallery from "../ImageGallery/ImageGallery";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 import Loader from "../Loader/Loader";
 import ErrorMassage from "../ErrorMassage/ErrorMassage";
-
 import ImageModal from "../ImageModal/ImageModal";
-import toast, { Toaster } from "react-hot-toast";
+
+import { fetchPhotos } from "../services/fetchUnsplash";
+import { useEffect, useState } from "react";
+import css from "./App.module.css";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -47,9 +46,9 @@ function App() {
   }, [page, topic]);
 
   const handleSearch = (newTopic) => {
-    if (newTopic.trim() === "") {
-      toast.error("You need to type something");
-    }
+    // if (newTopic.trim() === "") {
+    //   toast.error("You need to type something");
+    // }
     setTopic(newTopic);
     setPage(1);
     setPhotos([]);
@@ -75,7 +74,6 @@ function App() {
       {photos.length > 0 && (
         <ImageGallery openModal={openModal} items={photos} />
       )}
-      <Toaster position="top-center" reverseOrder={false} />
 
       {page >= totalPages && <b>END OF COLLECTION!!!!</b>}
 

@@ -1,6 +1,8 @@
 import css from "./SearchBar.module.css";
 import { Field, Form, Formik } from "formik";
 import { FaSearch } from "react-icons/fa";
+import toast, { Toaster } from "react-hot-toast";
+
 export default function SearchBar({ onSearch }) {
   return (
     <header className={css.header}>
@@ -8,6 +10,9 @@ export default function SearchBar({ onSearch }) {
         className={css.formik}
         initialValues={{ topic: "" }}
         onSubmit={(values, actions) => {
+          if (values.topic.trim() === "") {
+            toast.error("You need to type something");
+          }
           onSearch(values.topic);
           actions.resetForm();
         }}
@@ -24,6 +29,7 @@ export default function SearchBar({ onSearch }) {
           </button>
         </Form>
       </Formik>
+      <Toaster position="top-center" reverseOrder={false} />
     </header>
   );
 }
